@@ -116,6 +116,10 @@ leaveBtn.addEventListener('click', async () => {
 function enterRoom() {
   joinForm.classList.add('hidden');
   roomStatus.classList.remove('hidden');
+  
+  // FIX: Force the canvas to recalculate dimensions now that it's visible!
+  window.resizeTableCanvas?.();
+  
   roomNameDisplay.textContent = `Room: ${roomCode}`;
   joinBtn.disabled    = false;
   joinBtn.textContent = 'Join / Create';

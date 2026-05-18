@@ -1,10 +1,24 @@
 // ── TABLE.JS ── Animated study room table visualization
-
 const canvas = document.getElementById('table-canvas');
 const ctx = canvas.getContext('2d');
 const W = 540, H = 380;
-canvas.width = W; canvas.height = H;
-canvas.style.height = H + 'px';
+
+// This function forces the canvas to recalculate its bounds when visible
+window.resizeTableCanvas = function() {
+  const container = canvas.parentElement;
+  if (!container) return;
+  
+  // Use the container's real width or fallback to default max width
+  const currentWidth = container.clientWidth || W;
+  
+  canvas.width = currentWidth;
+  canvas.height = H;
+  canvas.style.width = '100%';
+  canvas.style.height = H + 'px';
+};
+
+// Run it once on load as a fallback
+window.resizeTableCanvas();
 
 const PALETTE = ['#7c6ef5','#52d9a0','#f472b6','#fb923c','#38bdf8','#a78bfa','#34d399','#f87171'];
 const STATUS_COLOR = { idle: '#7c6ef5', studying: '#52d9a0', break: '#f5c842' };
