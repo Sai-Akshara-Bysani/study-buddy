@@ -138,6 +138,8 @@ function renderFriends() {
     if (a === MY_ID) return -1;
     if (b === MY_ID) return 1;
     return 0;
+    
+    window.updateTableMembers?.(members);
   });
  
   if (sortedKeys.length === 0) {
@@ -199,6 +201,8 @@ function enterDemoMode(name, code) {
     members['Demo Friend'] = { name: 'Demo Friend', status: 'studying' };
     renderFriends();
   }, 3000);
+
+  window.updateTableMembers?.(members);
 }
  
 // ── Util: consistent color per username ──
