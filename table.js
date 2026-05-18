@@ -45,13 +45,24 @@ let seated = [];
 let frame = 0;
 
 function setMembers(memberObj) {
+  if (!memberObj) return;
   const list = Object.values(memberObj);
-  seated = list.map((m, i) => ({
-    ...m,
-    seat: SEATS[i % SEATS.length],
-    color: nameColor(m.name),
-    phase: Math.random() * Math.PI * 2
-  }));
+  seated = list.map((m, i) => {
+    // Clean status string in case it has emojis attached
+    let cleanStatus = 'idle';
+    if (m.status) {
+      if (m.status.includes('studying')) cleanStatus = 'studying';
+      else if (m.status.includes('break')) cleanStatus = 'break';
+    }
+
+    return {
+      name: m.name || 'Buddy',
+      status: cleanStatus,
+      seat: SEATS[i % SEATS.length],
+      color: nameColor(m.name || 'Buddy'),
+      phase: Math.random() * Math.PI * 2
+    };
+  });
 }
 
 function draw() {
