@@ -45,24 +45,35 @@ let seated = [];
 let frame = 0;
 
 function setMembers(memberObj) {
-  if (!memberObj) return;
-  const list = Object.values(memberObj);
-  seated = list.map((m, i) => {
-    // Clean status string in case it has emojis attached
-    let cleanStatus = 'idle';
-    if (m.status) {
-      if (m.status.includes('studying')) cleanStatus = 'studying';
-      else if (m.status.includes('break')) cleanStatus = 'break';
-    }
+  if (!memberObj) {
+    seated = [];
+    return;
+  }
 
-    return {
-      name: m.name || 'Buddy',
-      status: cleanStatus,
-      seat: SEATS[i % SEATS.length],
-      color: nameColor(m.name || 'Buddy'),
-      phase: Math.random() * Math.PI * 2
-    };
-  });
+  // Handle both arrays and objects just in case
+  const list = Array.isArray(memberObj) ? memberObj : Object.values(memberObj);
+  
+  seated = list
+    .filter(m => m && m.name) // Only map users who actually have a name string
+    .map((m, i) => {
+      // Clean status string in case it has emojis attached (e.g., "☕ Idle" -> "idle")
+      let cleanStatus = 'idle';
+      const rawStatus = String(m.status || '').toLowerCase();
+      
+      if (rawStatus.includes('study') || rawStatus.includes('📖')) {
+        cleanStatus = 'studying';
+      } else if (rawStatus.includes('break') || rawStatus.includes('🌿')) {
+        cleanStatus = 'break';
+      }
+
+      return {
+        name: m.name,
+        status: cleanStatus,
+        seat: SEATS[i % SEATS.length],
+        color: nameColor(m.name),
+        phase: Math.random() * Math.PI * 2
+      };
+    });
 }
 
 function draw() {
@@ -70,11 +81,15 @@ function draw() {
   const t = frame / 60;
   const bg = '#1a1d27'; // matches --surface
 
-  ctx.clearRect(0, 0, W, H);
-  ctx.fillStyle = bg;
-  ctx.fillRect(0, 0, W, H);
+  // Dynamically calculate center based on actual canvas size
+  const centerX = canvas.width / 2;
+  const centerY = canvas.height / 2;
 
-  // Table
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Table centered dynamically
   ctx.save();
   ctx.shadowColor = 'rgba(0,0,0,0.3)';
   ctx.shadowBlur = 20;
@@ -82,7 +97,7 @@ function draw() {
   ctx.strokeStyle = '#3c4260';
   ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.ellipse(270, 195, 168, 96, 0, 0, Math.PI * 2);
+  ctx.ellipse(centerX, centerY, 168, 96, 0, 0, Math.PI * 2);
   ctx.fill(); ctx.stroke();
   ctx.restore();
 
@@ -91,7 +106,7 @@ function draw() {
   ctx.lineWidth = 1;
   for (let i = -3; i <= 3; i++) {
     ctx.beginPath();
-    ctx.ellipse(270, 195, 155 + i*5, 86 + i*3, 0, 0, Math.PI * 2);
+    ctx.ellipse(centerX, centerY, 155 + i*5, 86 + i*3, 0, 0, Math.PI * 2);
     ctx.stroke();
   }
 
@@ -100,11 +115,24 @@ function draw() {
     ctx.font = '500 13px system-ui';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('Waiting for friends…', 270, 195);
+    ctx.fillText('Waiting for friends…', centerX, centerY);
   }
 
-  seated.forEach(m => {
-    const { x, y, side, color, phase } = m.seat;
+  seated.forEach((m, i) => {
+    // Dynamically calculate seat positions relative to center
+    const seatIndex = i % SEATS.length;
+    const standardSeat = SEATS[seatIndex];
+    
+    // Offset standard seat coordinates from the original hardcoded center (270, 195)
+    const offsetX = standardSeat.x - 270;
+    const offsetY = standardSeat.y - 195;
+    
+    const x = centerX + offsetX;
+    const y = centerY + offsetY;
+    const side = standardSeat.side;
+    
+    const phase = m.phase;
+    const color = m.color || '#7c6ef5';
     const bob = Math.sin(t * 1.8 + phase) * 3;
     const sc = STATUS_COLOR[m.status] || '#7c6ef5';
 
