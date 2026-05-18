@@ -20,7 +20,7 @@ const PET_MESSAGES = {
   sleeping: ["Zzz... 😴", "Wake me when ready", "Napping... 💤"],
 };
 
-export function setPetState(state) {
+function setPetState(state) {
   pet.className = `state-${state}`;
   showSpeech(randomFrom(PET_MESSAGES[state] || PET_MESSAGES.idle));
 }
