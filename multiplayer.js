@@ -117,12 +117,18 @@ function enterRoom() {
   joinForm.classList.add('hidden');
   roomStatus.classList.remove('hidden');
   
-  // FIX: Force the canvas to recalculate dimensions now that it's visible!
+  // Force the canvas to resize now that it's visible
   window.resizeTableCanvas?.();
   
   roomNameDisplay.textContent = `Room: ${roomCode}`;
   joinBtn.disabled    = false;
   joinBtn.textContent = 'Join / Create';
+  
+  // FIX: Explicitly push data right here to kick off table rendering
+  if (typeof window.updateTableMembers === 'function') {
+    window.updateTableMembers(members);
+  }
+  
   renderFriends();
 }
 
@@ -146,7 +152,12 @@ function renderFriends() {
   });
 
   // Always sync the table with current members
-  window.updateTableMembers?.(members);
+  if (typeof window.updateTableMembers === 'function') {
+    window.updateTableMembers(members);
+  } else {
+    // Fallback check if scripts loaded slightly out of order
+    setTimeout(() => window.updateTableMembers?.(members), 100);
+  }
 
   if (sortedKeys.length === 0) {
     friendsList.innerHTML = '<p style="color:var(--muted);font-size:0.85rem">Waiting for friends to join…</p>';
