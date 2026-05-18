@@ -36,7 +36,7 @@ function initSupabase() {
     return false;
   }
   if (!sbClient) {
-    sbClient = window.sbClient.createClient(SUPABASE_URL, SUPABASE_KEY, {
+    sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
       realtime: { params: { eventsPerSecond: 10 } }
     });
   }
