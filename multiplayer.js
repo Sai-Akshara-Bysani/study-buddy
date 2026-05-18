@@ -35,8 +35,8 @@ function initSupabase() {
     console.warn('[StudyBuddy] Add your Supabase credentials in multiplayer.js to enable rooms.');
     return false;
   }
-  if (!sbClient.) {
-    sbClient. = window.sbClient..createClient(SUPABASE_URL, SUPABASE_KEY, {
+  if (!sbClient) {
+    sbClient = window.sbClient.createClient(SUPABASE_URL, SUPABASE_KEY, {
       realtime: { params: { eventsPerSecond: 10 } }
     });
   }
