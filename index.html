@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Study Buddy 🐸</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ── STUDY PET (fixed corner overlay) ── -->
+  <div id="pet-container">
+    <div id="pet" title="Your study buddy!">
+      <div class="pet-body">
+        <div class="eye left"></div>
+        <div class="eye right"></div>
+        <div class="mouth"></div>
+      </div>
+      <div class="pet-legs">
+        <div class="leg left"></div>
+        <div class="leg right"></div>
+      </div>
+    </div>
+    <div id="pet-speech" class="hidden">Let's study! 📚</div>
+  </div>
+
+  <!-- ── MAIN APP ── -->
+  <div class="app">
+    <header>
+      <h1>🐸 Study Buddy</h1>
+      <p class="subtitle">Focus together, anywhere.</p>
+    </header>
+
+    <!-- Room Panel -->
+    <section class="card" id="room-card">
+      <h2>Study Room</h2>
+      <div id="join-form">
+        <input id="username-input" type="text" placeholder="Your name" maxlength="20" />
+        <div class="room-row">
+          <input id="room-input" type="text" placeholder="Room code (e.g. frog42)" maxlength="12" />
+          <button id="join-btn">Join / Create</button>
+        </div>
+        <p class="hint">Share the room code with friends so they can join you!</p>
+      </div>
+      <div id="room-status" class="hidden">
+        <div class="room-header">
+          <span id="room-name-display"></span>
+          <button id="leave-btn" class="small">Leave</button>
+        </div>
+        <div id="friends-list"></div>
+      </div>
+    </section>
+
+    <!-- Timer Panel -->
+    <section class="card" id="timer-card">
+      <h2>Pomodoro Timer</h2>
+      <div class="timer-modes">
+        <button class="mode-btn active" data-mode="study" data-minutes="25">Study 25m</button>
+        <button class="mode-btn" data-mode="short" data-minutes="5">Break 5m</button>
+        <button class="mode-btn" data-mode="long" data-minutes="15">Long break 15m</button>
+      </div>
+      <div id="timer-display">25:00</div>
+      <div class="timer-controls">
+        <button id="timer-start">▶ Start</button>
+        <button id="timer-reset">↺ Reset</button>
+      </div>
+      <p id="timer-label" class="timer-label">Time to focus!</p>
+    </section>
+
+    <!-- Music Panel -->
+    <section class="card" id="music-card">
+      <h2>Lo-fi Music 🎵</h2>
+      <div class="music-tracks">
+        <button class="track-btn active" data-id="jfKfPfyJRdk">Lofi Girl ☕</button>
+        <button class="track-btn" data-id="4xDzrJKXOOY">Synthwave 🌃</button>
+        <button class="track-btn" data-id="lTRiuFIWV54">Jazz Hop 🎷</button>
+      </div>
+      <div id="yt-player-container">
+        <iframe
+          id="yt-player"
+          width="100%" height="80"
+          src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=0&controls=1&loop=1&playlist=jfKfPfyJRdk"
+          frameborder="0"
+          allow="autoplay; encrypted-media"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </section>
+
+  </div><!-- /.app -->
+
+  <!-- ── SCRIPTS ── -->
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="pet.js"></script>
+  <script src="timer.js"></script>
+  <script src="music.js"></script>
+  <script src="multiplayer.js"></script>
+
+</body>
+</html>
