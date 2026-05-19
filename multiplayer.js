@@ -3,9 +3,9 @@
 const SUPABASE_URL  = 'https://cohyohjabmajxwsyluwm.supabase.co';
 const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNvaHlvaGphYm1hanh3c3lsdXdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwODgzMDcsImV4cCI6MjA5NDY2NDMwN30.cKvaPvtkAWZAJ5pJJWmkWdmENCMojVRclfuzKpeeogg';
 
-// ── Elements ──
-const joinForm        = document.getElementById('join-form');
-const roomStatus      = document.getElementById('room-status');
+// ── Elements (Updated to target new Blookle layout containers) ──
+const lobbyScreen     = document.getElementById('lobby-screen');
+const mainAppContent  = document.getElementById('main-app-content');
 const usernameInput   = document.getElementById('username-input');
 const avatarInput     = document.getElementById('avatar-input');
 const roomInput       = document.getElementById('room-input');
@@ -90,7 +90,7 @@ joinBtn.addEventListener('click', async () => {
       } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
         alert(`Room connection failed (${status}). Check Realtime is enabled in your Supabase project.`);
         joinBtn.disabled    = false;
-        joinBtn.textContent = 'Join / Create';
+        joinBtn.textContent = 'Enter Room';
       }
     });
 });
@@ -124,12 +124,14 @@ window.broadcastStatus = async function(status) {
 
 // ── UI: enter room ──
 function enterRoom() {
-  joinForm.classList.add('hidden');
-  roomStatus.classList.remove('hidden');
+  // Hide the initial entry screen entirely, show full workspace app
+  lobbyScreen.classList.add('hidden');
+  mainAppContent.classList.remove('hidden');
+  
   window.resizeTableCanvas?.();
   roomNameDisplay.textContent = `Room: ${roomCode}`;
   joinBtn.disabled    = false;
-  joinBtn.textContent = 'Join / Create';
+  joinBtn.textContent = 'Enter Room';
   document.getElementById('music-sync-bar')?.classList.remove('hidden');
   window.updateTableMembers?.(members);
   renderFriends();
@@ -137,8 +139,10 @@ function enterRoom() {
 
 // ── UI: exit room ──
 function exitRoom() {
-  roomStatus.classList.add('hidden');
-  joinForm.classList.remove('hidden');
+  // Hide workspace app, reveal clean lobby screen
+  mainAppContent.classList.add('hidden');
+  lobbyScreen.classList.remove('hidden');
+  
   friendsList.innerHTML = '';
   window.setPetState?.('idle');
   window.updateTableMembers?.({});
@@ -197,7 +201,7 @@ function renderFriends() {
 }
 
 const STATUS_LABELS = {
-  idle:     '☕ Idle',
+  idle:      '☕ Idle',
   studying: '📖 Studying',
   break:    '🌿 Break',
 };
