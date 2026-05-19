@@ -528,13 +528,15 @@ input[type="text"]:focus { border-color: var(--accent); }
     left: 0 !important;
     bottom: 0 !important;
     transform-origin: left bottom !important; 
+    filter: drop-shadow(4px 6px 10px rgba(0, 0, 0, 0.2)) !important;
     transform: translate(-40px, 0px) scale(2.5) rotate(0deg) !important; 
 }
 
 .right-group {
     right: 0 !important;
     top: 0 !important;
-    transform-origin: right top !important; 
+    transform-origin: right top !important;
+    filter: drop-shadow(4px 6px 10px rgba(0, 0, 0, 0.2)) !important;
     transform: translate(60px, -90px) scale(2.5) rotate(0deg) !important;      
 }
 
@@ -571,4 +573,343 @@ input[type="text"]:focus { border-color: var(--accent); }
     font-style: italic; /* Looks incredibly classy for subtitles */
     font-size: 1.45rem;
     color: var(--muted);
+}
+
+/* ── ADD THESE RULES TO THE BOTTOM OF style.css ── */
+
+/* Make the scene taller so it feels like a proper room */
+#study-table-wrap {
+  border-radius: 14px !important;
+  overflow: hidden !important;
+  border: 1px solid var(--border) !important;
+}
+
+#table-canvas {
+  display: block !important;
+  width: 100% !important;
+  background: #1c1528 !important; /* match the wall gradient start */
+}
+
+/* ── FULL SCREEN LAYOUT REBUILD ── */
+
+/* Modify the active app container to take up the complete viewport layout */
+.app {
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Clear headers that waste vertical whitespace */
+.app > header {
+  display: none;
+}
+
+/* The Canvas Workspace backdrop */
+#canvas-workspace {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #f9f9fb; /* High brightness/white clean workspace backdrop */
+  z-index: 1;
+}
+
+#study-table-wrap {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+#table-canvas {
+  width: 100% !important;
+  height: 100% !important;
+  background: transparent !important; /* Keep it transparent to read the parent white canvas */
+  display: block;
+}
+
+/* ── HUD FLOATING CARD CONTROLS ── */
+.widget-column {
+  position: absolute;
+  top: 20px;
+  z-index: 10; /* Ensures control layers stay clickable over roaming avatars */
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 320px;
+  pointer-events: none; /* Allows canvas space clicks to flow through background columns */
+}
+
+.widget-column.left-widgets {
+  left: 20px;
+}
+
+.widget-column.right-widgets {
+  right: 20px;
+}
+
+/* Force elements back to being interactive */
+.widget-card {
+  pointer-events: auto !important;
+  background: rgba(255, 255, 255, 0.92) !important; /* Elegant glass-tinted whiteboard panels */
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06) !important;
+  color: #2e3138 !important; /* Clean contrasting readable typography text */
+  margin-bottom: 0 !important;
+}
+
+/* Adjust components inside your customized white containers */
+.widget-card h2, .widget-card #timer-display, .widget-card .room-header {
+  color: #1e2025 !important;
+}
+
+.widget-card button:not(.primary-btn) {
+  background: #f0f2f6;
+  color: #333;
+  border: 1px solid #dcdfe6;
+}
+
+.widget-card button.active {
+  background: var(--accent) !important;
+  color: #fff !important;
+}
+
+/* Scale styling tweaks for embedded profile elements inside active list items */
+#friends-list {
+  color: #333;
+}
+
+/* ── AVATAR IMAGE OVERLAY FIX ── */
+/* ── TRANSPARENT SCALE AVATARS ── */
+.avatar-dom-layer img {
+  border-radius: 0% !important;   /* Strips away the circle frame constraint */
+  border: none !important;        /* Removes the thick white outline */
+  box-shadow: none !important;    /* Removes the box glow so it blends natively */
+  object-fit: contain !important; /* Keeps the avatar aspect ratio safe and uncropped */
+  background-color: transparent !important; /* Ensures transparent background shines through */
+  transition: transform 0.2s ease-out, top 0.3s ease-out, left 0.3s ease-out;
+}
+
+/* ==========================================================================
+   🎨 FUNKY RETRO ZINE & SCRAPBOOK WORKSPACE (INSIDE PAGE)
+   ========================================================================== */
+
+/* Full Screen Canvas Space Styling Reset */
+#canvas-workspace {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  /* Creamy textured collage paper backing background */
+  background-color: #faf7f2 !important; 
+  background-image: 
+    radial-gradient(#e4dfd5 1.5px, transparent 1.5px), 
+    radial-gradient(#e4dfd5 1.5px, #faf7f2 1.5px);
+  background-size: 24px 24px;
+  background-position: 0 0, 12px 12px;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* Floating Widget Alignment Columns */
+.widget-column {
+  position: absolute;
+  top: 30px;
+  z-index: 100; /* Stays interactive over roaming avatars */
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 320px;
+  pointer-events: none;
+}
+.widget-column.left-widgets { left: 30px; }
+.widget-column.right-widgets { right: 30px; }
+
+/* 📑 Hand-Cut Zine Paper Cards */
+.widget-card {
+  pointer-events: auto !important;
+  background: #ffffff !important;
+  border: 3px solid #1e2025 !important; /* Heavy marker ink outlines */
+  border-radius: 2px !important;       /* Jagged hand-sliced look */
+  box-shadow: 8px 8px 0px #1e2025 !important; /* Flat comic book pop shadow */
+  padding: 20px !important;
+  position: relative;
+  transition: transform 0.2s ease;
+  color: #1e2025 !important;
+}
+
+/* Give separate floating panels individual organic tilts */
+#room-card   { transform: rotate(-1.2deg); }
+#timer-card  { transform: rotate(1deg); }
+#music-card  { transform: rotate(-0.8deg); }
+
+/* 📌 The Decorative Top Pushpin / Sticker Accent anchor */
+.widget-card::before {
+  content: "📌";
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%) rotate(15deg);
+  font-size: 1.4rem;
+  z-index: 110;
+}
+
+/* Customize specific panel pins to look like washi masking tape instead */
+#music-card::before {
+  content: "";
+  position: absolute;
+  top: -12px;
+  left: 35%;
+  width: 80px;
+  height: 22px;
+  background: rgba(82, 217, 160, 0.4); /* Minty translucent washi tape strip */
+  transform: rotate(-5deg);
+  border-left: 2px dashed rgba(0,0,0,0.1);
+  border-right: 2px dashed rgba(0,0,0,0.1);
+}
+
+/* Typography Overhaul inside Widgets */
+.widget-card h2 {
+  font-family: 'Courier New', Courier, monospace !important;
+  font-weight: 900;
+  font-size: 1.15rem !important;
+  text-transform: uppercase;
+  letter-spacing: -0.5px;
+  margin-bottom: 14px;
+  border-bottom: 2px dashed #1e2025;
+  padding-bottom: 6px;
+  color: #1e2025 !important;
+}
+
+/* ⚡ Brutalist Blocky Buttons */
+.widget-card button:not(.primary-btn) {
+  background: #ffffff !important;
+  color: #1e2025 !important;
+  border: 2px solid #1e2025 !important;
+  border-radius: 4px !important;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  font-size: 0.85rem;
+  padding: 6px 12px;
+  box-shadow: 3px 3px 0px #1e2025;
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.widget-card button:not(.primary-btn):hover {
+  background: #fffdf3 !important;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px #1e2025;
+}
+
+.widget-card button:not(.primary-btn):active {
+  transform: translate(3px, 3px) !important;
+  box-shadow: 0px 0px 0px #1e2025 !important;
+}
+
+/* Highlighted Active Selection States */
+.widget-card .mode-btn.active, 
+.widget-card .track-btn.active {
+  background: #7c6ef5 !important; /* Electric Purple pop accent */
+  color: #ffffff !important;
+  box-shadow: 3px 3px 0px #1e2025 !important;
+}
+
+/* Pomodoro Big Timer Font Layout */
+#timer-display {
+  font-family: 'Courier New', Courier, monospace !important;
+  font-weight: 900 !important;
+  font-size: 3.2rem !important;
+  color: #1e2025 !important;
+  text-align: center;
+  margin: 14px 0;
+  letter-spacing: -2px;
+  background: #fbf9f3;
+  border: 2px solid #1e2025;
+  box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05);
+  padding: 4px 0;
+  border-radius: 4px;
+}
+
+/* Timer Control Container Alignment */
+.timer-controls {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+.timer-controls button {
+  flex: 1;
+  padding: 10px !important;
+}
+
+/* Layout adjustments for inputs embedded inside widgets */
+.widget-card input[type="text"] {
+  background: #ffffff;
+  border: 2px solid #1e2025;
+  border-radius: 4px;
+  padding: 8px 12px;
+  color: #1e2025;
+  box-shadow: 3px 3px 0px #1e2025;
+}
+
+/* Music Sync Status Alert Ribbon bar */
+#music-sync-bar {
+  background: #fff9e6 !important;
+  border: 2px solid #1e2025 !important;
+  box-shadow: 3px 3px 0px #1e2025;
+  color: #1e2025 !important;
+  border-radius: 4px;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+}
+
+/* Embedded YouTube Player Frame Component */
+#yt-player-container {
+  border-radius: 4px !important;
+  border: 2px solid #1e2025 !important;
+  box-shadow: 4px 4px 0px #1e2025;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+/* 👥 Room Active Friends List Layout Refinement */
+#friends-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.friend-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fffdf9;
+  border: 1.5px solid #1e2025;
+  padding: 6px 10px;
+  border-radius: 4px;
+  box-shadow: 2px 2px 0px #1e2025;
+}
+
+.friend-avatar {
+  width: 24px;
+  height: 24px;
+  border: 1.5px solid #1e2025;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 11px;
+}
+
+.friend-name {
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  font-size: 13px;
+  color: #1e2025;
 }

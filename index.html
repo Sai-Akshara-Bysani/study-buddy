@@ -9,7 +9,6 @@
 
 <body>
 
-  <!-- ── STUDY PET (fixed corner overlay) ── -->
   <div id="pet-container">
     <div id="pet" title="Your study buddy!">
       <div class="pet-body">
@@ -25,18 +24,17 @@
     <div id="pet-speech" class="hidden">Let's study! 📚</div>
   </div>
 
-  <!-- ── 1. INITIAL ENTRY LOBBY (What the user sees first) ── -->
   <div id="lobby-screen" class="lobby-container">
     <div class="lobby-card">
       <div class="brand-logo-container" aria-label="Blookle">
-      <img src="images/b.png" alt="B" class="logo-letter letter-b" />
-      <img src="images/l1.png" alt="l" class="logo-letter letter-l1" />
-      <img id="drag-button-target" src="images/o1.png" alt="o" class="logo-letter letter-o1 draggable-button" ondragstart="return false;" />
-      <img src="images/o2.png" alt="o" class="logo-letter letter-o2" />
-      <img src="images/k.png" alt="k" class="logo-letter letter-k" />
-      <img src="images/l2.png" alt="l" class="logo-letter letter-l2" />
-      <img src="images/e.png" alt="e" class="logo-letter letter-e" />
-    </div>
+        <img src="images/b.png" alt="B" class="logo-letter letter-b" />
+        <img src="images/l1.png" alt="l" class="logo-letter letter-l1" />
+        <img id="drag-button-target" src="images/o1.png" alt="o" class="logo-letter letter-o1 draggable-button" ondragstart="return false;" />
+        <img src="images/o2.png" alt="o" class="logo-letter letter-o2" />
+        <img src="images/k.png" alt="k" class="logo-letter letter-k" />
+        <img src="images/l2.png" alt="l" class="logo-letter letter-l2" />
+        <img src="images/e.png" alt="e" class="logo-letter letter-e" />
+      </div>
     
       <p class="subtitle">Join a room. Call a friend. Study and jam.</p>
 
@@ -59,83 +57,72 @@
     </div>
   </div>
 
-  <!-- ── 2. MAIN APP (Hidden until they successfully enter a room) ── -->
   <div class="app hidden" id="main-app-content">
-    <header>
-      <h1>🐸 blookle workspace</h1>
-      <p class="subtitle">Continuous focus blocks with your study circle.</p>
-    </header>
+    
+    <div id="canvas-workspace">
+      <div id="study-table-wrap">
+        <canvas id="table-canvas"></canvas>
+      </div>
+    </div>
 
-    <!-- Room Panel -->
-    <section class="card" id="room-card">
-      <h2>Active Study Room</h2>
-      <div id="room-status">
+    <div class="widget-column left-widgets">
+      <section class="card widget-card" id="room-card">
         <div class="room-header">
           <span id="room-name-display"></span>
-          <button id="leave-btn" class="small">Leave Room</button>
+          <button id="leave-btn" class="small">Leave</button>
         </div>
         <div id="friends-list"></div>
-        <div id="study-table-wrap" style="margin-top:16px; border-radius:12px; overflow:hidden; border:1px solid var(--border);">
-          <canvas id="table-canvas" style="display:block; width:100%; background:var(--surface2);"></canvas>
+      </section>
+
+      <section class="card widget-card" id="timer-card">
+        <h2>Pomodoro</h2>
+        <div class="timer-modes">
+          <button class="mode-btn active" data-mode="study" data-minutes="25">Focus 25m</button>
+          <button class="mode-btn" data-mode="short" data-minutes="5">Break 5m</button>
         </div>
-      </div>
-    </section>
+        <div id="timer-display">25:00</div>
+        <div class="timer-controls">
+          <button id="timer-start">▶ Start</button>
+          <button id="timer-reset">↺ Reset</button>
+        </div>
+      </section>
+    </div>
 
-    <!-- Timer Panel -->
-    <section class="card" id="timer-card">
-      <h2>Pomodoro Timer</h2>
-      <div class="timer-modes">
-        <button class="mode-btn active" data-mode="study" data-minutes="25">Study 25m</button>
-        <button class="mode-btn" data-mode="short" data-minutes="5">Break 5m</button>
-        <button class="mode-btn" data-mode="long" data-minutes="15">Long break 15m</button>
-      </div>
-      <div id="timer-display">25:00</div>
-      <div class="timer-controls">
-        <button id="timer-start">▶ Start</button>
-        <button id="timer-reset">↺ Reset</button>
-      </div>
-      <p id="timer-label" class="timer-label">Time to focus!</p>
-    </section>
+    <div class="widget-column right-widgets">
+      <section class="card widget-card" id="music-card">
+        <h2>Lo-fi Music 🎵</h2>
+        <div class="music-tracks">
+          <button class="track-btn active" data-id="jfKfPfyJRdk">☕ Lofi</button>
+          <button class="track-btn" data-id="4xDzrJKXOOY">Lighting 🌃</button>
+          <button class="track-btn" data-id="lTRiuFIWV54">Jazz 🎷</button>
+        </div>
 
-    <!-- Music Panel -->
-    <section class="card" id="music-card">
-      <h2>Lo-fi Music 🎵</h2>
-      <div class="music-tracks">
-        <button class="track-btn active" data-id="jfKfPfyJRdk">Lofi Girl ☕</button>
-        <button class="track-btn" data-id="4xDzrJKXOOY">Synthwave 🌃</button>
-        <button class="track-btn" data-id="lTRiuFIWV54">Jazz Hop 🎷</button>
-      </div>
+        <div style="display:flex; gap:6px; margin-bottom:10px;">
+          <input id="yt-url-input" type="text" placeholder="Paste YouTube link..." style="flex:1; font-size: 13px;" />
+          <button id="yt-queue-btn" class="small" style="white-space:nowrap;">＋ Add</button>
+        </div>
 
-      <div style="display:flex; gap:8px; margin-bottom:14px;">
-        <input id="yt-url-input" type="text" placeholder="Paste any YouTube URL to queue it…" style="flex:1;" />
-        <button id="yt-queue-btn" class="small" style="white-space:nowrap;">＋ Add</button>
-      </div>
+        <div id="music-sync-bar" class="hidden">
+          <span id="music-sync-label">🎵 Room track</span>
+          <button id="music-play-btn"  class="small">▶</button>
+          <button id="music-pause-btn" class="small">⏸</button>
+          <button id="music-skip-btn"  class="small">⏭</button>
+        </div>
 
-      <div id="music-sync-bar" class="hidden" style="
-        display:flex; align-items:center; gap:10px;
-        background:var(--surface2); border:1px solid var(--border);
-        border-radius:8px; padding:8px 14px; margin-bottom:12px; font-size:0.82rem; color:var(--muted);">
-        <span id="music-sync-label" style="flex:1">🎵 Room music</span>
-        <button id="music-play-btn"  class="small">▶ Play</button>
-        <button id="music-pause-btn" class="small">⏸ Pause</button>
-        <button id="music-skip-btn"  class="small">⏭ Skip</button>
-      </div>
+        <div id="yt-player-container">
+          <div id="yt-player"></div>
+        </div>
+        <div id="music-queue"></div>
+      </section>
+    </div>
 
-      <div id="yt-player-container" style="border-radius:10px; overflow:hidden; border:1px solid var(--border);">
-        <div id="yt-player"></div>
-      </div>
-
-      <div id="music-queue" style="margin-top:12px; display:flex; flex-direction:column; gap:6px;"></div>
-    </section>
-
-  </div><!-- /.app -->
+  </div>
 
   <div id="scrapbook-decorations">
     <img src="images/left-stickers.png" class="sticker-group left-group" alt="Left side scrapbook stickers" />
     <img src="images/right-stickers.png" class="sticker-group right-group" alt="Right side scrapbook stickers" />
   </div>
 
-  <!-- ── SCRIPTS ── -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script src="https://www.youtube.com/iframe_api"></script>
   <script src="pet.js"></script>
@@ -157,19 +144,14 @@
       button.addEventListener("pointerdown", function(e) {
           isDragging = true;
           button.setPointerCapture(e.pointerId);
-
-          // Track mouse relative coordinates
           startX = e.clientX - currentX;
           startY = e.clientY - currentY;
       });
 
       button.addEventListener("pointermove", function(e) {
           if (!isDragging) return;
-
           currentX = e.clientX - startX;
           currentY = e.clientY - startY;
-
-          // Directly apply coordinates to the CSS variables
           button.style.setProperty('--drag-x', currentX + 'px');
           button.style.setProperty('--drag-y', currentY + 'px');
       });
@@ -180,7 +162,6 @@
               button.releasePointerCapture(e.pointerId);
           }
       }
-
       button.addEventListener("pointerup", stopDrag);
       button.addEventListener("pointercancel", stopDrag);
     })();
