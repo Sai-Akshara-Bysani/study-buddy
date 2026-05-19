@@ -53,11 +53,11 @@ const avatarEls = SEATS.map(() => {
     position: absolute;
     width: 26px;
     height: 26px;
-    border-radius: 50%;
-    object-fit: cover;
+    border-radius: 0;
+    object-fit: contain;
     display: none;
-    border: 2px solid #7c6ef5;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    border: none;
+    background: transparent;
   `;
   overlay.appendChild(img);
   return img;
@@ -109,9 +109,6 @@ function setMembers(memberObj) {
 function updateOverlayPositions(t) {
   const centerX = canvas.width  / 2;
   const centerY = canvas.height / 2;
-  const scaleX  = canvas.clientWidth  / canvas.width;
-  const scaleY  = canvas.clientHeight / canvas.height;
-  const R = 13;
 
   avatarEls.forEach((el, i) => {
     const m = seated[i];
@@ -124,12 +121,18 @@ function updateOverlayPositions(t) {
     const bob   = Math.sin(t * 1.8 + m.phase) * 3;
     const charY = y + (side === 'top' ? -10 + bob : side === 'bottom' ? 10 + bob : bob);
 
-    // Head centre in canvas pixels → CSS pixels within the overlay
-    const cssX = x     * scaleX;
-    const cssY = (charY - 14) * scaleY;
+    const size = 52; // px — displayed size of the avatar image
+    const scaleX = canvas.clientWidth / canvas.width;
+    const scaleY = canvas.clientHeight / canvas.height;
 
-    el.style.left = (cssX - R) + 'px';
-    el.style.top  = (cssY - R) + 'px';
+    // Centre the image on the character's head position
+    const cssX = x * scaleX - size / 2;
+    const cssY = (charY - 14) * scaleY - size / 2;
+
+    el.style.width  = size + 'px';
+    el.style.height = size + 'px';
+    el.style.left   = cssX + 'px';
+    el.style.top    = cssY + 'px';
   });
 }
 
@@ -181,17 +184,19 @@ function draw() {
     const sc    = STATUS_COLOR[m.status] || '#7c6ef5';
     const charY = y + (side === 'top' ? -10 + bob : side === 'bottom' ? 10 + bob : bob);
 
-    // Chair cushion
-    ctx.fillStyle   = '#2a2e3e';
-    ctx.strokeStyle = '#3c4260';
-    ctx.lineWidth   = 1.5;
-    ctx.beginPath();
-    if (side === 'top' || side === 'bottom') {
-      ctx.ellipse(x, y + (side === 'top' ? 12 : -12), 18, 9, 0, 0, Math.PI * 2);
-    } else {
-      ctx.ellipse(x + (side === 'left' ? 12 : -12), y, 9, 18, 0, 0, Math.PI * 2);
+    // Chair cushion — skip if avatar (the image stands alone)
+    if (!m.avatar) {
+      ctx.fillStyle   = '#2a2e3e';
+      ctx.strokeStyle = '#3c4260';
+      ctx.lineWidth   = 1.5;
+      ctx.beginPath();
+      if (side === 'top' || side === 'bottom') {
+        ctx.ellipse(x, y + (side === 'top' ? 12 : -12), 18, 9, 0, 0, Math.PI * 2);
+      } else {
+        ctx.ellipse(x + (side === 'left' ? 12 : -12), y, 9, 18, 0, 0, Math.PI * 2);
+      }
+      ctx.fill(); ctx.stroke();
     }
-    ctx.fill(); ctx.stroke();
 
     // Body — only draw if no avatar (avatar img covers the whole character head area)
     if (!m.avatar) {
