@@ -28,9 +28,18 @@
   <!-- ── 1. INITIAL ENTRY LOBBY (What the user sees first) ── -->
   <div id="lobby-screen" class="lobby-container">
     <div class="lobby-card">
-      <h1 class="brand-title">blookle 🐸</h1>
+      <div class="brand-logo-container" aria-label="Blookle">
+      <img src="images/b.png" alt="B" class="logo-letter letter-b" />
+      <img src="images/l1.png" alt="l" class="logo-letter letter-l1" />
+      <img src="images/o1.png" alt="o" class="logo-letter letter-o1" />
+      <img src="images/o2.png" alt="o" class="logo-letter letter-o2" />
+      <img src="images/k.png" alt="k" class="logo-letter letter-k" />
+      <img src="images/l2.png" alt="l" class="logo-letter letter-l2" />
+      <img src="images/e.png" alt="e" class="logo-letter letter-e" />
+    </div>
+    
       <p class="subtitle">Join a workspace to focus together.</p>
-      
+
       <div class="input-group">
         <input id="username-input" type="text" placeholder="Your name" maxlength="20" />
       </div>
@@ -120,6 +129,11 @@
     </section>
 
   </div><!-- /.app -->
+
+  <div id="scrapbook-decorations">
+    <img src="images/left-stickers.png" class="sticker-group left-group" alt="Left side scrapbook stickers" />
+    <img src="images/right-stickers.png" class="sticker-group right-group" alt="Right side scrapbook stickers" />
+  </div>
 
   <!-- ── SCRIPTS ── -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>

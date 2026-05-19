@@ -2,10 +2,14 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:        #0f1117;
-  --surface:   #1a1d27;
-  --surface2:  #23273a;
-  --border:    #2e3347;
+  /* --bg:        #0f1117;
+  --surface:   #1a1d27; */
+  --bg:        #5e0303;
+  --surface:   #550000;
+  --surface2:   #550000;
+  /* --surface2:  #23273a; */
+  /* --border:    #2e3347; */
+  --border:    #550000;
   --text:      #e8eaf0;
   --muted:     #7a80a0;
   --accent:    #7c6ef5;
@@ -387,20 +391,19 @@ input[type="text"]:focus { border-color: var(--accent); }
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-color: var(--background, #1a1a2e); /* Fallback to dark if variables aren't loaded */
+    background-color: var(--bg); /* Fallback to dark if variables aren't loaded */
     padding: 20px;
     box-sizing: border-box;
 }
 
 .lobby-card {
-    background-color: var(--surface, #16213e);
-    padding: 40px;
-    border-radius: 16px;
-    border: 2px solid var(--border, #0f3460);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+    background-color: transparent; /* Removes the inner box background color */
+    border: none;                  /* Removes the distinct border lines */
+    box-shadow: none;              /* Removes the box drop shadow */
+    padding: 20px;
     text-align: center;
     width: 100%;
-    max-width: 400px;
+    max-width: 600px;              /* Boosted slightly so your structural logo has room to breathe */
 }
 
 .brand-title {
@@ -420,7 +423,7 @@ input[type="text"]:focus { border-color: var(--accent); }
     width: 100%;
     padding: 12px 16px;
     box-sizing: border-box;
-    background-color: var(--background, #1a1a2e);
+    background-color: var(--bg);
     border: 2px solid var(--border, #0f3460);
     border-radius: 8px;
     color: #fff;
@@ -449,4 +452,148 @@ input[type="text"]:focus { border-color: var(--accent); }
 .primary-btn:hover {
     background-color: #00d8cc;
     transform: translateY(-2px);
+}
+
+/* Container for the scrapbook letters */
+.brand-logo-container {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin: 40px auto 30px auto !important;
+    padding: 10px !important;
+    width: 100% !important;
+    max-width: 900px !important;
+    /* Removed 'gap' entirely to prevent layout blocking */
+}
+
+/* Individual letter image rules */
+.logo-letter {
+    height: 160px !important; /* Made them noticeably bigger! */
+    width: auto !important;
+    object-fit: contain !important;
+    flex-shrink: 0 !important; 
+    filter: drop-shadow(4px 6px 10px rgba(0, 0, 0, 0.5)) !important; 
+    transition: transform 0.2s ease-in-out !important;
+    
+    /* 🌟 THE FORCE FIX: Negative margins aggressively pull adjacent letters over each other. 
+       If you want them even tighter, change -35px to -45px or more. */
+    margin-left: -35px !important;
+    margin-right: -35px !important;
+}
+
+/* FORCE LETTERS TO ALLOW MARGIN MOVEMENTS */
+.logo-letter, 
+.brand-logo-container span {
+    display: inline-block !important;
+}
+
+/* ── Hand-tuned whimsical rotation & STRICT LAYER OVERLAPPING ── */
+/* If a letter looks like it's tucked under the wrong one, we control it here via z-index */
+.letter-b  { transform: rotate(-5deg) translateY(4px) !important; z-index: 10 !important; margin-left: 0 !important; }
+.letter-l1 { transform: rotate(6deg) translateY(-8px) !important; z-index: 9 !important; }
+.letter-o1 { transform: rotate(-7deg) translateY(-8px)scale(1.15) !important; z-index: 8 !important; } /* Button */
+.letter-o2 { transform: rotate(5deg) translateY(3px) scale(1.2) !important; z-index: 7 !important; } /* Star */
+.letter-k  { transform: rotate(-4deg) translateY(-6px) !important; z-index: 6 !important; }
+.letter-l2 { transform: rotate(4deg) scale(0.95) !important; z-index: 5 !important; }
+.letter-e  { transform: rotate(7deg) translateY(8px) !important; z-index: 4 !important; margin-left: -10px !important; margin-right: 0 !important; }
+
+/* Bouncy hover effect */
+.brand-logo-container:hover .logo-letter {
+    transform: translateY(-10px) rotate(0deg) !important;
+}
+
+/* 🌟 Make sure the outer frame expands wide enough for a massive logo */
+.lobby-card {
+    background-color: transparent; 
+    border: none;                  
+    box-shadow: none;              
+    padding: 20px;
+    text-align: center;
+    width: 100%;
+    /* Boosted to 800px so a huge 140px-tall word can spread out comfortably */
+    max-width: 800px; 
+}
+
+/* ── SCRAPBOOK STICKER CANVAS OVERRIDE ── */
+.side-design {
+    position: fixed !important;
+    left: 0px !important;    /* Kept at zero as a baseline anchor */
+    bottom: 0px !important;  /* Kept at zero as a baseline anchor */
+    
+    /* 🌟 ADJUST POSITION HERE USING TRANSLATE(X, Y) 
+       - Change 40px to push it right (+) or left (-)
+       - Change 40px to push it up (+) or down (-) 
+       - Keep scale(2.2) at the very end! */
+    transform: translate(-50px, -10px) scale(2.2) !important; 
+    
+    transform-origin: left bottom !important; 
+    z-index: 99999 !important; 
+    pointer-events: none !important; 
+    max-width: 220px !important;
+    display: block !important;
+    transition: opacity 0.4s ease, visibility 0.4s ease !important;
+}
+
+.side-design img {
+    width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+    filter: drop-shadow(4px 6px 10px rgba(0, 0, 0, 0.5)) rotate(-5deg) !important; 
+    opacity: 1 !important;
+}
+
+/* ── HIDDEN STATE FOR WHEN LEAVING LOBBY ── */
+.side-design.hidden-sticker {
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+/* ── SCRAPBOOK DECORATIONS CANVAS ── */
+#scrapbook-decorations {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    pointer-events: none !important; /* Users can safely click "through" them to type */
+    z-index: 99999 !important;       /* Floating layer resting over inputs and page frames */
+    transition: opacity 0.4s ease, visibility 0.4s ease !important;
+}
+
+/* Base rules for both sticker graphic groups */
+.sticker-group {
+    position: absolute !important;
+    height: auto !important;
+    max-width: 320px !important;    /* Keeps them from blowing out too huge on giant monitors */
+}
+
+/* 📍 LEFT CORNER GROUPING (Orange, Headphones, Music Notes) */
+.left-group {
+    left: 0 !important;
+    bottom: 0 !important;
+    transform: scale(2.5) !important;         /* Tweak this multiplier to make the group larger/smaller */
+    transform-origin: left bottom !important; /* Anchors the scaling matrix to the bottom-left corner */
+    
+    /* 💡 If the group needs to slip slightly off-screen or out of boundaries, 
+          uncomment andse negative margins like this: */
+    margin-left: -40px !important;
+    /* margin-bottom: -10px !important; */
+}
+
+/* 📍 RIGHT CORNER GROUPING (Flowers, Receipt, Cards, Shell) */
+.right-group {
+    right: 0 !important;
+    top: 0 !important;
+    transform: scale(2.5) !important;      /* Tweak this multiplier to make the group larger/smaller */
+    transform-origin: right top !important; /* Anchors the scaling matrix to the top-right corner */
+    
+    /* 💡 If the group needs to slip slightly off-screen or out of boundaries: */
+    margin-right: -60px !important;
+    margin-top: -90px !important;
+}
+
+/* ── EXIT STATE (When leaving the lobby) ── */
+#scrapbook-decorations.hidden-canvas {
+    opacity: 0 !important;
+    visibility: hidden !important;
 }
