@@ -193,36 +193,33 @@ function draw() {
     }
     ctx.fill(); ctx.stroke();
 
-    // Body
-    ctx.fillStyle = m.color;
-    ctx.beginPath();
-    ctx.ellipse(x, charY + 4, 11, 9, 0, 0, Math.PI);
-    ctx.fill();
-
-    // Head — colored circle with face if no avatar, just a ring if avatar (img overlaid)
-    ctx.save();
-    ctx.shadowColor   = 'rgba(0,0,0,0.3)';
-    ctx.shadowBlur    = 6;
-    ctx.shadowOffsetY = 2;
-    ctx.fillStyle = m.color;
-    ctx.beginPath();
-    ctx.arc(x, charY - 14, 13, 0, Math.PI * 2);
-    if (!m.avatar) ctx.fill();
-    ctx.restore();
-
-    ctx.beginPath();
-    ctx.arc(x, charY - 14, 13, 0, Math.PI * 2);
-    ctx.strokeStyle = m.color;
-    ctx.lineWidth   = 2;
-    ctx.stroke();
+    // Body — only draw if no avatar (avatar img covers the whole character head area)
+    if (!m.avatar) {
+      ctx.fillStyle = m.color;
+      ctx.beginPath();
+      ctx.ellipse(x, charY + 4, 11, 9, 0, 0, Math.PI);
+      ctx.fill();
+    }
 
     if (!m.avatar) {
+      // Head
+      ctx.save();
+      ctx.shadowColor   = 'rgba(0,0,0,0.3)';
+      ctx.shadowBlur    = 6;
+      ctx.shadowOffsetY = 2;
+      ctx.fillStyle = m.color;
+      ctx.beginPath();
+      ctx.arc(x, charY - 14, 13, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
       // Eyes
       ctx.fillStyle = '#1e293b';
       ctx.beginPath();
       ctx.arc(x - 4, charY - 16, 2, 0, Math.PI * 2);
       ctx.arc(x + 4, charY - 16, 2, 0, Math.PI * 2);
       ctx.fill();
+
       // Smile
       ctx.strokeStyle = '#1e293b';
       ctx.lineWidth   = 1.5;
