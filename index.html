@@ -36,7 +36,13 @@
       <h2>Study Room</h2>
       <div id="join-form">
         <input id="username-input" type="text" placeholder="Your name" maxlength="20" />
-        <div class="room-row">
+        <div style="margin-top:8px;">
+          <input id="avatar-input" type="text" placeholder="Avatar image URL (optional — make one on picrew.me!)" />
+          <p class="hint" style="margin-top:4px;">
+            Make a character on <a href="https://picrew.me" target="_blank" style="color:var(--accent)">picrew.me</a>, save it, then right-click → Copy image address and paste above.
+          </p>
+        </div>
+        <div class="room-row" style="margin-top:8px;">
           <input id="room-input" type="text" placeholder="Room code (e.g. frog42)" maxlength="12" />
           <button id="join-btn">Join / Create</button>
         </div>
@@ -49,8 +55,8 @@
         </div>
         <div id="friends-list"></div>
         <div id="study-table-wrap" style="margin-top:16px; border-radius:12px; overflow:hidden; border:1px solid var(--border);">
-        <canvas id="table-canvas" style="display:block; width:100%; background:var(--surface2);"></canvas>
-</div>
+          <canvas id="table-canvas" style="display:block; width:100%; background:var(--surface2);"></canvas>
+        </div>
       </div>
     </section>
 
@@ -73,32 +79,50 @@
     <!-- Music Panel -->
     <section class="card" id="music-card">
       <h2>Lo-fi Music 🎵</h2>
+
+      <!-- Preset tracks -->
       <div class="music-tracks">
         <button class="track-btn active" data-id="jfKfPfyJRdk">Lofi Girl ☕</button>
         <button class="track-btn" data-id="4xDzrJKXOOY">Synthwave 🌃</button>
         <button class="track-btn" data-id="lTRiuFIWV54">Jazz Hop 🎷</button>
       </div>
-      <div id="yt-player-container">
-        <iframe
-          id="yt-player"
-          width="100%" height="80"
-          src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=0&controls=1&loop=1&playlist=jfKfPfyJRdk"
-          frameborder="0"
-          allow="autoplay; encrypted-media"
-          allowfullscreen>
-        </iframe>
+
+      <!-- Custom YT URL input -->
+      <div style="display:flex; gap:8px; margin-bottom:14px;">
+        <input id="yt-url-input" type="text" placeholder="Paste any YouTube URL to queue it…" style="flex:1;" />
+        <button id="yt-queue-btn" class="small" style="white-space:nowrap;">＋ Add</button>
       </div>
+
+      <!-- Synced controls (shown only in a room) -->
+      <div id="music-sync-bar" class="hidden" style="
+        display:flex; align-items:center; gap:10px;
+        background:var(--surface2); border:1px solid var(--border);
+        border-radius:8px; padding:8px 14px; margin-bottom:12px; font-size:0.82rem; color:var(--muted);">
+        <span id="music-sync-label" style="flex:1">🎵 Room music</span>
+        <button id="music-play-btn"  class="small">▶ Play</button>
+        <button id="music-pause-btn" class="small">⏸ Pause</button>
+        <button id="music-skip-btn"  class="small">⏭ Skip</button>
+      </div>
+
+      <!-- YT player (hidden div — controlled via IFrame API) -->
+      <div id="yt-player-container" style="border-radius:10px; overflow:hidden; border:1px solid var(--border);">
+        <div id="yt-player"></div>
+      </div>
+
+      <!-- Queue list -->
+      <div id="music-queue" style="margin-top:12px; display:flex; flex-direction:column; gap:6px;"></div>
     </section>
 
   </div><!-- /.app -->
 
   <!-- ── SCRIPTS ── -->
-  <!-- Supabase CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <!-- YouTube IFrame API — calls window.onYouTubeIframeAPIReady when ready -->
+  <script src="https://www.youtube.com/iframe_api"></script>
   <script src="pet.js"></script>
   <script src="timer.js"></script>
-  <script src="music.js"></script>
   <script src="multiplayer.js"></script>
+  <script src="music.js"></script>
   <script src="table.js"></script>
 
 </body>
