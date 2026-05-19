@@ -1,22 +1,21 @@
 // ── TABLE.JS ── Animated study room table visualization
-// Avatar images are rendered as position:absolute <img> elements overlaid on
-// the canvas — this sidesteps CORS restrictions entirely since <img> tags can
-// display any cross-origin image without tainting the canvas.
+
+window.addEventListener('DOMContentLoaded', () => {
 
 const canvas = document.getElementById('table-canvas');
 const ctx = canvas.getContext('2d');
 const W = 540, H = 380;
 
-// ── Overlay container sits on top of the canvas, same size ──
+// ── Overlay container sits on top of the canvas ──
+const wrap = document.getElementById('study-table-wrap');
+wrap.style.position = 'relative';
+
 const overlay = document.createElement('div');
-overlay.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:' + H + 'px;pointer-events:none;overflow:hidden;';
-canvas.parentElement.style.position = 'relative';
-canvas.parentElement.appendChild(overlay);
+overlay.style.cssText = 'position:absolute;top:0;left:0;width:100%;pointer-events:none;overflow:hidden;';
+wrap.appendChild(overlay);
 
 window.resizeTableCanvas = function() {
-  const container = canvas.parentElement;
-  if (!container) return;
-  const currentWidth = container.clientWidth || W;
+  const currentWidth = wrap.clientWidth || W;
   canvas.width  = currentWidth;
   canvas.height = H;
   canvas.style.width  = '100%';
@@ -47,17 +46,18 @@ function nameColor(name) {
   return PALETTE[Math.abs(h) % PALETTE.length];
 }
 
-// ── Per-seat overlay <img> elements (one per seat slot, reused) ──
+// One <img> per seat slot, reused across updates
 const avatarEls = SEATS.map(() => {
   const img = document.createElement('img');
   img.style.cssText = `
     position: absolute;
-    width: 26px; height: 26px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     object-fit: cover;
     display: none;
     border: 2px solid #7c6ef5;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
   `;
   overlay.appendChild(img);
   return img;
@@ -92,12 +92,12 @@ function setMembers(memberObj) {
       };
     });
 
-  // Update overlay img elements
+  // Update overlay <img> elements
   avatarEls.forEach((el, i) => {
     const m = seated[i];
     if (m && m.avatar) {
-      el.src              = m.avatar;
-      el.style.display    = 'block';
+      el.src               = m.avatar;
+      el.style.display     = 'block';
       el.style.borderColor = m.color;
     } else {
       el.style.display = 'none';
@@ -106,42 +106,36 @@ function setMembers(memberObj) {
   });
 }
 
-// ── Position overlay imgs in sync with the bobbing animation ──
 function updateOverlayPositions(t) {
   const centerX = canvas.width  / 2;
   const centerY = canvas.height / 2;
-  // canvas rect relative to the overlay container
-  const canvasRect     = canvas.getBoundingClientRect();
-  const containerRect  = canvas.parentElement.getBoundingClientRect();
-  const offsetLeft     = canvasRect.left - containerRect.left;
-  const offsetTop      = canvasRect.top  - containerRect.top;
-
-  const R = 13; // head radius, matches canvas drawing
+  const scaleX  = canvas.clientWidth  / canvas.width;
+  const scaleY  = canvas.clientHeight / canvas.height;
+  const R = 13;
 
   avatarEls.forEach((el, i) => {
     const m = seated[i];
     if (!m || !m.avatar) return;
 
-    const standardSeat = SEATS[i % SEATS.length];
-    const x    = centerX + (standardSeat.x - 270);
-    const y    = centerY + (standardSeat.y - 195);
-    const side = standardSeat.side;
-    const bob  = Math.sin(t * 1.8 + m.phase) * 3;
+    const seat  = SEATS[i % SEATS.length];
+    const x     = centerX + (seat.x - 270);
+    const y     = centerY + (seat.y - 195);
+    const side  = seat.side;
+    const bob   = Math.sin(t * 1.8 + m.phase) * 3;
     const charY = y + (side === 'top' ? -10 + bob : side === 'bottom' ? 10 + bob : bob);
 
-    // Head center on canvas → pixel position on overlay
-    const headX = offsetLeft + (x / W) * canvas.clientWidth;
-    const headY = offsetTop  + ((charY - 14) / H) * canvas.clientHeight;
+    // Head centre in canvas pixels → CSS pixels within the overlay
+    const cssX = x     * scaleX;
+    const cssY = (charY - 14) * scaleY;
 
-    el.style.left = (headX - R) + 'px';
-    el.style.top  = (headY - R) + 'px';
+    el.style.left = (cssX - R) + 'px';
+    el.style.top  = (cssY - R) + 'px';
   });
 }
 
 function draw() {
   frame++;
   const t = frame / 60;
-
   const centerX = canvas.width  / 2;
   const centerY = canvas.height / 2;
 
@@ -149,7 +143,7 @@ function draw() {
   ctx.fillStyle = '#1a1d27';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Table surface
+  // Table
   ctx.save();
   ctx.shadowColor = 'rgba(0,0,0,0.3)';
   ctx.shadowBlur  = 20;
@@ -161,7 +155,7 @@ function draw() {
   ctx.fill(); ctx.stroke();
   ctx.restore();
 
-  // Wood grain rings
+  // Wood grain
   ctx.strokeStyle = 'rgba(255,255,255,0.025)';
   ctx.lineWidth   = 1;
   for (let i = -3; i <= 3; i++) {
@@ -179,11 +173,10 @@ function draw() {
   }
 
   seated.forEach((m, i) => {
-    const standardSeat = SEATS[i % SEATS.length];
-    const x    = centerX + (standardSeat.x - 270);
-    const y    = centerY + (standardSeat.y - 195);
-    const side = standardSeat.side;
-
+    const seat  = SEATS[i % SEATS.length];
+    const x     = centerX + (seat.x - 270);
+    const y     = centerY + (seat.y - 195);
+    const side  = seat.side;
     const bob   = Math.sin(t * 1.8 + m.phase) * 3;
     const sc    = STATUS_COLOR[m.status] || '#7c6ef5';
     const charY = y + (side === 'top' ? -10 + bob : side === 'bottom' ? 10 + bob : bob);
@@ -206,38 +199,36 @@ function draw() {
     ctx.ellipse(x, charY + 4, 11, 9, 0, 0, Math.PI);
     ctx.fill();
 
-    // Head — only draw colored circle + face if no avatar URL
-    if (!m.avatar) {
-      ctx.save();
-      ctx.shadowColor   = 'rgba(0,0,0,0.3)';
-      ctx.shadowBlur    = 6;
-      ctx.shadowOffsetY = 2;
-      ctx.fillStyle = m.color;
-      ctx.beginPath();
-      ctx.arc(x, charY - 14, 13, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
+    // Head — colored circle with face if no avatar, just a ring if avatar (img overlaid)
+    ctx.save();
+    ctx.shadowColor   = 'rgba(0,0,0,0.3)';
+    ctx.shadowBlur    = 6;
+    ctx.shadowOffsetY = 2;
+    ctx.fillStyle = m.color;
+    ctx.beginPath();
+    ctx.arc(x, charY - 14, 13, 0, Math.PI * 2);
+    if (!m.avatar) ctx.fill();
+    ctx.restore();
 
+    ctx.beginPath();
+    ctx.arc(x, charY - 14, 13, 0, Math.PI * 2);
+    ctx.strokeStyle = m.color;
+    ctx.lineWidth   = 2;
+    ctx.stroke();
+
+    if (!m.avatar) {
       // Eyes
       ctx.fillStyle = '#1e293b';
       ctx.beginPath();
       ctx.arc(x - 4, charY - 16, 2, 0, Math.PI * 2);
       ctx.arc(x + 4, charY - 16, 2, 0, Math.PI * 2);
       ctx.fill();
-
       // Smile
       ctx.strokeStyle = '#1e293b';
       ctx.lineWidth   = 1.5;
       ctx.lineCap     = 'round';
       ctx.beginPath();
       ctx.arc(x, charY - 11, 4, 0.15 * Math.PI, 0.85 * Math.PI);
-      ctx.stroke();
-    } else {
-      // Draw a placeholder ring so the body connects cleanly while image loads
-      ctx.beginPath();
-      ctx.arc(x, charY - 14, 13, 0, Math.PI * 2);
-      ctx.strokeStyle = m.color;
-      ctx.lineWidth   = 2;
       ctx.stroke();
     }
 
@@ -250,7 +241,7 @@ function draw() {
     ctx.lineWidth   = 1.5;
     ctx.stroke();
 
-    // Name label
+    // Name
     ctx.textAlign    = 'center';
     ctx.fillStyle    = '#e8eaf0';
     ctx.font         = '500 10px system-ui';
@@ -258,18 +249,18 @@ function draw() {
     const ly = charY + 8;
     ctx.fillText(m.name.length > 9 ? m.name.slice(0, 8) + '…' : m.name, x, ly);
 
-    // Status label
+    // Status
     ctx.fillStyle = sc;
     ctx.font      = '400 9px system-ui';
     ctx.fillText(STATUS_LABEL[m.status] || m.status, x, ly + 13);
   });
 
-  // Move overlay <img> elements to match the bobbing positions
   updateOverlayPositions(t);
-
   requestAnimationFrame(draw);
 }
 
 draw();
 
 window.updateTableMembers = setMembers;
+
+}); // end DOMContentLoaded
