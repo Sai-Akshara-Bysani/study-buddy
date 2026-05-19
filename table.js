@@ -45,8 +45,8 @@ function loadAvatar(url) {
   if (!url) return null;
   if (imgCache[url]) return imgCache[url];
   const img = new Image();
-  img.crossOrigin = 'anonymous'; // works when the image host allows it
-  img.src = url;
+  // Route through a CORS proxy so canvas can draw cross-origin images
+  img.src = `https://corsproxy.io/?${encodeURIComponent(url)}`;
   imgCache[url] = img;
   return img;
 }
