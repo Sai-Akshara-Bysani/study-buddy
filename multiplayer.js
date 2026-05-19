@@ -1,4 +1,4 @@
-// ── MULTIPLAYER.JS ── Real-time study room via Supabase
+// ── MULTIPLAYER.JS Real-time study room via Supabase
 
 const SUPABASE_URL  = 'https://cohyohjabmajxwsyluwm.supabase.co';
 const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNvaHlvaGphYm1hanh3c3lsdXdtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwODgzMDcsImV4cCI6MjA5NDY2NDMwN30.cKvaPvtkAWZAJ5pJJWmkWdmENCMojVRclfuzKpeeogg';
@@ -13,6 +13,7 @@ const joinBtn         = document.getElementById('join-btn');
 const leaveBtn        = document.getElementById('leave-btn');
 const roomNameDisplay = document.getElementById('room-name-display');
 const friendsList     = document.getElementById('friends-list');
+const sideStickers    = document.getElementById('scrapbook-decorations'); // Target side decoration canvas
 
 // ── State ──
 const MY_ID  = crypto.randomUUID();
@@ -128,6 +129,13 @@ function enterRoom() {
   lobbyScreen.classList.add('hidden');
   mainAppContent.classList.remove('hidden');
   
+  // 🌟 BULLETPROOF TRIGGER: Find it dynamically and force it to hide inline
+  const decorations = document.getElementById('scrapbook-decorations');
+  if (decorations) {
+    decorations.style.setProperty('display', 'none', 'important');
+    decorations.classList.add('hidden-canvas');
+  }
+  
   window.resizeTableCanvas?.();
   roomNameDisplay.textContent = `Room: ${roomCode}`;
   joinBtn.disabled    = false;
@@ -142,6 +150,13 @@ function exitRoom() {
   // Hide workspace app, reveal clean lobby screen
   mainAppContent.classList.add('hidden');
   lobbyScreen.classList.remove('hidden');
+  
+  // 🌟 BULLETPROOF RESET: Bring it back when returning to lobby
+  const decorations = document.getElementById('scrapbook-decorations');
+  if (decorations) {
+    decorations.style.setProperty('display', 'block', 'important');
+    decorations.classList.remove('hidden-canvas');
+  }
   
   friendsList.innerHTML = '';
   window.setPetState?.('idle');
@@ -211,5 +226,5 @@ function nameToColor(name) {
   const colors = ['#7c6ef5','#52d9a0','#f472b6','#fb923c','#38bdf8','#a78bfa','#34d399','#f87171'];
   let hash = 0;
   for (const c of name) hash = (hash * 31 + c.charCodeAt(0)) & 0xffffffff;
-  return colors[Math.abs(hash) % colors.length];
+  return colors[MY_ID.charCodeAt(0) % colors.length] || colors[0]; // fallback check
 }

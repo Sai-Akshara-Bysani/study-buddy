@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Study Buddy 🐸</title>
+  <title>Blookle</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -31,14 +31,14 @@
       <div class="brand-logo-container" aria-label="Blookle">
       <img src="images/b.png" alt="B" class="logo-letter letter-b" />
       <img src="images/l1.png" alt="l" class="logo-letter letter-l1" />
-      <img src="images/o1.png" alt="o" class="logo-letter letter-o1" />
+      <img id="drag-button-target" src="images/o1.png" alt="o" class="logo-letter letter-o1 draggable-button" ondragstart="return false;" />
       <img src="images/o2.png" alt="o" class="logo-letter letter-o2" />
       <img src="images/k.png" alt="k" class="logo-letter letter-k" />
       <img src="images/l2.png" alt="l" class="logo-letter letter-l2" />
       <img src="images/e.png" alt="e" class="logo-letter letter-e" />
     </div>
     
-      <p class="subtitle">Join a workspace to focus together.</p>
+      <p class="subtitle">Join a room. Call a friend. Study and jam.</p>
 
       <div class="input-group">
         <input id="username-input" type="text" placeholder="Your name" maxlength="20" />
@@ -49,9 +49,9 @@
       </div>
 
       <div class="input-group">
-        <input id="avatar-input" type="text" placeholder="Avatar image URL (optional)" />
+        <input id="avatar-input" type="text" placeholder="Avatar image URL" />
         <p class="hint">
-          Make a character on <a href="https://picrew.me" target="_blank">picrew.me</a>, right-click → Copy image address and paste here.
+          Make a character on <a href="https://picrew.me/en/image_maker/1908798" target="_blank">heree</a>, right-click → Copy image address and paste here.
         </p>
       </div>
 
@@ -143,6 +143,48 @@
   <script src="multiplayer.js"></script>
   <script src="music.js"></script>
   <script src="table.js"></script>
+
+  <script>
+    (function() {
+      const button = document.getElementById("drag-button-target");
+      if (!button) return;
+
+      let isDragging = false;
+      let startX, startY;
+      let currentX = 0;
+      let currentY = 0;
+
+      button.addEventListener("pointerdown", function(e) {
+          isDragging = true;
+          button.setPointerCapture(e.pointerId);
+
+          // Track mouse relative coordinates
+          startX = e.clientX - currentX;
+          startY = e.clientY - currentY;
+      });
+
+      button.addEventListener("pointermove", function(e) {
+          if (!isDragging) return;
+
+          currentX = e.clientX - startX;
+          currentY = e.clientY - startY;
+
+          // Directly apply coordinates to the CSS variables
+          button.style.setProperty('--drag-x', currentX + 'px');
+          button.style.setProperty('--drag-y', currentY + 'px');
+      });
+
+      function stopDrag(e) {
+          if (isDragging) {
+              isDragging = false;
+              button.releasePointerCapture(e.pointerId);
+          }
+      }
+
+      button.addEventListener("pointerup", stopDrag);
+      button.addEventListener("pointercancel", stopDrag);
+    })();
+  </script>
 
 </body>
 </html>
