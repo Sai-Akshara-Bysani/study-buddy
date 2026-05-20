@@ -915,145 +915,151 @@ input[type="text"]:focus { border-color: var(--accent); }
 }
 
 /* ==========================================================================
-   🎛️ RETRO BRUTALIST RECORD PLAYER COMPONENT
+   🎛️ REAL IMAGE ASSET TURNTABLE MECHANICAL ENGINE (FRAMELESS & ALIGNED)
    ========================================================================== */
 
 #record-player-container {
   width: 100%;
   display: flex;
   justify-content: center;
-  margin: 15px 0;
+  
+  /* 🌟 ENTIRE LAYOUT SCALED UP BY 1.35x (35% Bigger) */
+  transform: scale(1.35);
+  
+  /* Adds extra padding room so the upscaled graphics don't overlap nearby widgets */
+  margin: 45px 0; 
 }
 
 #turntable-chassis {
   width: 240px;
   height: 200px;
-  background: #fdfaf2; /* Warm paper vintage record body box */
-  border: 3px solid #1e2025;
-  box-shadow: 4px 4px 0px #1e2025;
-  border-radius: 4px;
   position: relative;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding-left: 20px;
+  background: transparent;
+  overflow: visible; /* Allows the tonearm or record to breathe naturally over the edges */
 }
 
-/* 🔄 The Vinyl Disk Assembly */
+/* Base background chassis picture layer */
+#chassis-base-asset {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+/* 🔄 The Vinyl Disc Layout Assembly */
 #vinyl-disc {
-  width: 150px;
-  height: 150px;
-  background: radial-gradient(circle, #222 30%, #111 60%, #000 100%);
-  border-radius: 50%;
-  border: 2px solid #1e2025;
-  position: relative;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  /* 🌟 SIZE BOOST: Explicitly set the width and height to 155px to override file padding constraints */
+  width: 155px !important;  
+  height: 155px !important;
+  position: absolute;
+  
+  /* 🌟 CALIBRATED PLACEMENT: 
+     Adjusted coordinates to cleanly drop the upscaled record right over the platter tracks */
+  top: 50.5% !important;
+  left: 31.5% !important;
+  
+  transform: translate(-50%, -50%) !important;
+  z-index: 2; 
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 50%;
+  filter: drop-shadow(2px 5px 8px rgba(0, 0, 0, 0.45));
 }
 
-/* Internal record needle ridges */
-#vinyl-grooves {
+/* 🔄 The Vinyl Disc Layout Assembly (Handles Placement Only) */
+#vinyl-disc {
+  width: 155px !important;  
+  height: 155px !important;
   position: absolute;
-  top: 10px; left: 10px; right: 10px; bottom: 10px;
-  border: 1px dashed rgba(255,255,255,0.08);
-  border-radius: 50%;
-  pointer-events: none;
-}
-#vinyl-grooves::before {
-  content: "";
-  position: absolute;
-  top: 20px; left: 20px; right: 20px; bottom: 20px;
-  border: 1px dashed rgba(255,255,255,0.05);
-  border-radius: 50%;
-}
-
-/* Center Album Label Badge Art */
-#vinyl-label {
-  width: 46px;
-  height: 46px;
-  background: #7c6ef5; /* Pop-art center sticker hue */
-  border: 2px solid #1e2025;
-  border-radius: 50%;
+  
+  /* Positions the center pin slot exactly over the turntable base */
+  top: 47.5% !important;
+  left: 45.5% !important;
+  transform: translate(-50%, -50%) !important; 
+  
+  z-index: 2; 
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-}
-
-#vinyl-track-badge {
-  font-family: 'Courier New', monospace;
-  font-size: 8px;
-  font-weight: bold;
-  color: #fff;
-  text-align: center;
-  white-space: nowrap;
-}
-
-#vinyl-center-pin {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  background: #1e2025;
   border-radius: 50%;
+  filter: drop-shadow(2px 5px 8px rgba(0, 0, 0, 0.45));
 }
 
-/* 🦾 The Interactive Metallic Tonearm */
+/* 🌟 IMAGE RENDER ENGINE CORRECTION */
+#vinyl-image-asset {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-radius: 50%;
+  
+  /* 🌟 SMOOTH ENGINE HANDSHAKE:
+     Ensures that when the player switches states, the spin resumes or freezes perfectly without jumps */
+  transition: transform 0.1s linear; 
+}
+
+/* ⚙️ Operational Engine Classes — Moving the Spin directly onto the graphic layer */
+
+/* 🔄 Instead of spinning the layout box, spin the internal image asset element! */
+#vinyl-disc.spinning #vinyl-image-asset {
+  animation: spinVinyl 5.0s linear infinite !important;
+}
+
+#vinyl-disc.stopped #vinyl-image-asset {
+  animation-play-state: paused !important;
+}
+
+/* Infinite 360-degree rotation vector loop (No translate conflicts anymore!) */
+@keyframes spinVinyl {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 🦾 The Movable Stick Hinge Needle Asset */
 #tonearm {
   position: absolute;
-  top: 15px;
-  right: 25px;
-  width: 35px;
-  height: 100px;
-  background: linear-gradient(90deg, #999, #bbb, #777);
-  border: 2px solid #1e2025;
-  border-radius: 4px;
-  transform-origin: top center;
-  z-index: 10;
-  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-/* Needle cartridge head point accent */
-#tonearm::after {
-  content: "";
-  position: absolute;
-  bottom: 0; left: -4px;
-  width: 12px; height: 18px;
-  background: #1e2025;
-  border-radius: 2px;
+  
+  /* 🌟 PIVOT CORRECTION: 
+     Moved exactly over the small gold/silver physical pivot pin base on your image */
+  top: 38px;
+  right: 6px;
+  
+  width: 58px;  
+  height: auto; 
+  z-index: 3; 
+  
+  /* Pins the rotation anchor directly to the physical screw center on your stick asset */
+  transform-origin: 75% 15% !important; 
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1) !important;
 }
 
-/* ⚙️ Operational State Transition Properties */
-#vinyl-disc.spinning {
-  animation: spinVinyl 2.2s linear infinite;
-}
-#vinyl-disc.stopped {
-  animation-play-state: paused;
-}
+/* ⚙️ Operational Engine Classes controlled by music.js */
 
-#tonearm.engaged {
-  transform: rotate(24deg); /* Swings needle arm onto the record face */
-}
+/* 🌟 RESTED POSITION (Combined & Cleaned Duplicates) */
 #tonearm.retracted {
-  transform: rotate(0deg);  /* Rests safety off-disk */
+  /* This will now actively shift your stick image 10px to the left at rest! */
+  transform: rotate(0deg) translateX(-10px) translateY(0px) !important;
 }
 
-/* Little extra chassis dials details */
-.chassis-dial {
-  position: absolute; width: 14px; height: 14px;
-  background: #fff; border: 2px solid #1e2025; border-radius: 50%;
-}
-.dial-1 { bottom: 15px; right: 45px; }
-.dial-2 { bottom: 15px; right: 20px; }
-
-.sync-controls-cluster {
-  display: flex;
-  gap: 4px;
-  margin-top: 4px;
+/* 🌟 PLAYING POSITION (Combined & Cleaned Duplicates) */
+#tonearm.engaged {
+  /* Controls your exact landing coordinates when playing music */
+  transform: rotate(23deg) translateX(-2px) translateY(0px) !important; 
 }
 
-/* 🔄 Infinite Rotation Core Matrix Animation */
+/* 🔄 Platter Spinning Motor Engine */
+#vinyl-disc.spinning {
+  animation: spinVinyl 5.0s linear infinite !important;
+}
+
+#vinyl-disc.stopped {
+  animation-play-state: paused !important;
+}
+
+/* Infinite 360-degree rotation vector loop */
 @keyframes spinVinyl {
   0%   { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
