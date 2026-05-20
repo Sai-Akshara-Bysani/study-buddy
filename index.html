@@ -9,7 +9,7 @@
 
 <body>
 
-  <div id="pet-container">
+  <div id="pet-container" style="display: none;">
     <div id="pet" title="Your study buddy!">
       <div class="pet-body">
         <div class="eye left"></div>
@@ -26,14 +26,15 @@
 
   <div id="lobby-screen" class="lobby-container">
     <div class="lobby-card">
-      <div class="brand-logo-container" aria-label="Blookle">
-        <img src="images/b.png" alt="B" class="logo-letter letter-b" />
-        <img src="images/l1.png" alt="l" class="logo-letter letter-l1" />
-        <img id="drag-button-target" src="images/o1.png" alt="o" class="logo-letter letter-o1 draggable-button" ondragstart="return false;" />
-        <img src="images/o2.png" alt="o" class="logo-letter letter-o2" />
-        <img src="images/k.png" alt="k" class="logo-letter letter-k" />
-        <img src="images/l2.png" alt="l" class="logo-letter letter-l2" />
-        <img src="images/e.png" alt="e" class="logo-letter letter-e" />
+      
+      <div class="brand-logo-container" aria-label="Blookle" style="margin-bottom: 24px;">
+        <img src="images/b.png"  alt="B" class="logo-letter letter-b draggable-button" ondragstart="return false;" />
+        <img src="images/l1.png" alt="l" class="logo-letter letter-l1 draggable-button" ondragstart="return false;" />
+        <img src="images/o1.png" alt="o" class="logo-letter letter-o1 draggable-button" ondragstart="return false;" />
+        <img src="images/o2.png" alt="o" class="logo-letter letter-o2 draggable-button" ondragstart="return false;" />
+        <img src="images/k.png"  alt="k" class="logo-letter letter-k draggable-button" ondragstart="return false;" />
+        <img src="images/l2.png" alt="l" class="logo-letter letter-l2 draggable-button" ondragstart="return false;" />
+        <img src="images/e.png"  alt="e" class="logo-letter letter-e draggable-button" ondragstart="return false;" />
       </div>
     
       <p class="subtitle">Join a room. Call a friend. Study and jam.</p>
@@ -66,6 +67,7 @@
     </div>
 
     <div class="widget-column left-widgets">
+      
       <section class="card widget-card" id="room-card">
         <div class="room-header">
           <span id="room-name-display"></span>
@@ -89,36 +91,52 @@
     </div>
 
     <div class="widget-column right-widgets">
+      
       <section class="card widget-card" id="music-card">
-        <h2>Lo-fi Music 🎵</h2>
+        <h2>Lo-fi Record Player 🎵</h2>
+        
+        <div id="record-player-container">
+          <div id="turntable-chassis">
+            <div id="vinyl-disc" class="stopped">
+              <div id="vinyl-grooves"></div>
+              <div id="vinyl-label">
+                <span id="vinyl-track-badge">Blookle Jam</span>
+              </div>
+              <div id="vinyl-center-pin"></div>
+            </div>
+            <div id="tonearm" class="retracted"></div>
+            <div class="chassis-dial dial-1"></div>
+            <div class="chassis-dial dial-2"></div>
+          </div>
+        </div>
+
         <div class="music-tracks">
           <button class="track-btn active" data-id="jfKfPfyJRdk">☕ Lofi</button>
-          <button class="track-btn" data-id="4xDzrJKXOOY">Lighting 🌃</button>
-          <button class="track-btn" data-id="lTRiuFIWV54">Jazz 🎷</button>
+          <button class="track-btn" data-id="4xDzrJKXOOY">Synthwave 🌃</button>
+          <button class="track-btn" data-id="lTRiuFIWV54">Jazz Hop 🎷</button>
         </div>
 
         <div style="display:flex; gap:6px; margin-bottom:10px;">
-          <input id="yt-url-input" type="text" placeholder="Paste YouTube link..." style="flex:1; font-size: 13px;" />
+          <input id="yt-url-input" type="text" placeholder="Paste YouTube link or ID..." style="flex:1; font-size: 13px;" />
           <button id="yt-queue-btn" class="small" style="white-space:nowrap;">＋ Add</button>
         </div>
 
-        <div id="music-sync-bar" class="hidden">
-          <span id="music-sync-label">🎵 Room track</span>
-          <button id="music-play-btn"  class="small">▶</button>
-          <button id="music-pause-btn" class="small">⏸</button>
-          <button id="music-skip-btn"  class="small">⏭</button>
+        <div id="music-sync-bar">
+          <span id="music-sync-label">🎵 Platter Empty</span>
+          <div class="sync-controls-cluster">
+            <button id="music-play-btn"  class="small">▶ Play</button>
+            <button id="music-pause-btn" class="small">⏸ Pause</button>
+            <button id="music-skip-btn"  class="small">⏭ Skip</button>
+          </div>
         </div>
 
-        <div id="yt-player-container">
+        <div id="yt-player-container" style="position: absolute; bottom: -500px; left: -500px; width: 200px; height: 60px; overflow: hidden; pointer-events: none; z-index: -9999;">
           <div id="yt-player"></div>
         </div>
+        
         <div id="music-queue"></div>
       </section>
-    </div>
-
-  </div>
-
-  <div id="scrapbook-decorations">
+    </div> </div> <div id="scrapbook-decorations">
     <img src="images/left-stickers.png" class="sticker-group left-group" alt="Left side scrapbook stickers" />
     <img src="images/right-stickers.png" class="sticker-group right-group" alt="Right side scrapbook stickers" />
   </div>
@@ -133,37 +151,39 @@
 
   <script>
     (function() {
-      const button = document.getElementById("drag-button-target");
-      if (!button) return;
+      // Collects every asset image running the draggable engine identifier tag 
+      const dragTargets = document.querySelectorAll(".draggable-button");
+      
+      dragTargets.forEach(button => {
+        let isDragging = false;
+        let startX, startY;
+        let currentX = 0;
+        let currentY = 0;
 
-      let isDragging = false;
-      let startX, startY;
-      let currentX = 0;
-      let currentY = 0;
+        button.addEventListener("pointerdown", function(e) {
+            isDragging = true;
+            button.setPointerCapture(e.pointerId);
+            startX = e.clientX - currentX;
+            startY = e.clientY - currentY;
+        });
 
-      button.addEventListener("pointerdown", function(e) {
-          isDragging = true;
-          button.setPointerCapture(e.pointerId);
-          startX = e.clientX - currentX;
-          startY = e.clientY - currentY;
+        button.addEventListener("pointermove", function(e) {
+            if (!isDragging) return;
+            currentX = e.clientX - startX;
+            currentY = e.clientY - startY;
+            button.style.setProperty('--drag-x', currentX + 'px');
+            button.style.setProperty('--drag-y', currentY + 'px');
+        });
+
+        function stopDrag(e) {
+            if (isDragging) {
+                isDragging = false;
+                button.releasePointerCapture(e.pointerId);
+            }
+        }
+        button.addEventListener("pointerup", stopDrag);
+        button.addEventListener("pointercancel", stopDrag);
       });
-
-      button.addEventListener("pointermove", function(e) {
-          if (!isDragging) return;
-          currentX = e.clientX - startX;
-          currentY = e.clientY - startY;
-          button.style.setProperty('--drag-x', currentX + 'px');
-          button.style.setProperty('--drag-y', currentY + 'px');
-      });
-
-      function stopDrag(e) {
-          if (isDragging) {
-              isDragging = false;
-              button.releasePointerCapture(e.pointerId);
-          }
-      }
-      button.addEventListener("pointerup", stopDrag);
-      button.addEventListener("pointercancel", stopDrag);
     })();
   </script>
 

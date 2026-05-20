@@ -913,3 +913,148 @@ input[type="text"]:focus { border-color: var(--accent); }
   font-size: 13px;
   color: #1e2025;
 }
+
+/* ==========================================================================
+   🎛️ RETRO BRUTALIST RECORD PLAYER COMPONENT
+   ========================================================================== */
+
+#record-player-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 15px 0;
+}
+
+#turntable-chassis {
+  width: 240px;
+  height: 200px;
+  background: #fdfaf2; /* Warm paper vintage record body box */
+  border: 3px solid #1e2025;
+  box-shadow: 4px 4px 0px #1e2025;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 20px;
+}
+
+/* 🔄 The Vinyl Disk Assembly */
+#vinyl-disc {
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, #222 30%, #111 60%, #000 100%);
+  border-radius: 50%;
+  border: 2px solid #1e2025;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Internal record needle ridges */
+#vinyl-grooves {
+  position: absolute;
+  top: 10px; left: 10px; right: 10px; bottom: 10px;
+  border: 1px dashed rgba(255,255,255,0.08);
+  border-radius: 50%;
+  pointer-events: none;
+}
+#vinyl-grooves::before {
+  content: "";
+  position: absolute;
+  top: 20px; left: 20px; right: 20px; bottom: 20px;
+  border: 1px dashed rgba(255,255,255,0.05);
+  border-radius: 50%;
+}
+
+/* Center Album Label Badge Art */
+#vinyl-label {
+  width: 46px;
+  height: 46px;
+  background: #7c6ef5; /* Pop-art center sticker hue */
+  border: 2px solid #1e2025;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#vinyl-track-badge {
+  font-family: 'Courier New', monospace;
+  font-size: 8px;
+  font-weight: bold;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+}
+
+#vinyl-center-pin {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #1e2025;
+  border-radius: 50%;
+}
+
+/* 🦾 The Interactive Metallic Tonearm */
+#tonearm {
+  position: absolute;
+  top: 15px;
+  right: 25px;
+  width: 35px;
+  height: 100px;
+  background: linear-gradient(90deg, #999, #bbb, #777);
+  border: 2px solid #1e2025;
+  border-radius: 4px;
+  transform-origin: top center;
+  z-index: 10;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+/* Needle cartridge head point accent */
+#tonearm::after {
+  content: "";
+  position: absolute;
+  bottom: 0; left: -4px;
+  width: 12px; height: 18px;
+  background: #1e2025;
+  border-radius: 2px;
+}
+
+/* ⚙️ Operational State Transition Properties */
+#vinyl-disc.spinning {
+  animation: spinVinyl 2.2s linear infinite;
+}
+#vinyl-disc.stopped {
+  animation-play-state: paused;
+}
+
+#tonearm.engaged {
+  transform: rotate(24deg); /* Swings needle arm onto the record face */
+}
+#tonearm.retracted {
+  transform: rotate(0deg);  /* Rests safety off-disk */
+}
+
+/* Little extra chassis dials details */
+.chassis-dial {
+  position: absolute; width: 14px; height: 14px;
+  background: #fff; border: 2px solid #1e2025; border-radius: 50%;
+}
+.dial-1 { bottom: 15px; right: 45px; }
+.dial-2 { bottom: 15px; right: 20px; }
+
+.sync-controls-cluster {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+/* 🔄 Infinite Rotation Core Matrix Animation */
+@keyframes spinVinyl {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
